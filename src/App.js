@@ -5,8 +5,7 @@ import Onboarding from './Onboarding';
 import AccessibilityChecker from './AccessibilityChecker';
 import Evaluation from './Evaluation';
 
-const API = 'http://localhost:5000/api';
-
+const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const THEMES = {
   default:       { bg:'#ffffff', text:'#1a1a1a', accent:'#4A90E2', surface:'#f5f5f5' },
   high_contrast: { bg:'#000000', text:'#ffffff', accent:'#FFD700', surface:'#1a1a1a' },
