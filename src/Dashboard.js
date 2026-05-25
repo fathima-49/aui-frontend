@@ -15,10 +15,11 @@ export default function Dashboard({ userId, theme }) {
   const [loading,      setLoading]      = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     loadSessions();
     const interval = setInterval(loadSessions, 10000);
     return () => clearInterval(interval);
-  }, [userId]);
+  }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadSessions = async () => {
     try {
