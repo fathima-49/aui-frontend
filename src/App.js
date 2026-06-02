@@ -1,3 +1,5 @@
+import NeurotypeStats from './NeurotypeStats';
+import Spinner from './Spinner';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Dashboard from './Dashboard';
@@ -24,7 +26,13 @@ const STATE_COLORS = {
   Focused:'#1D9E75', Distracted:'#BA7517', Overstimulated:'#D85A30'
 };
 
+
 export default function App() {
+
+const [predicting, setPredicting] = useState(false);
+
+const [elapsed, setElapsed] = useState(0);
+
 
   // ── User identity ──────────────────────────────────────────────
   const [userId] = useState(
@@ -115,6 +123,15 @@ export default function App() {
     };
   }, []);
 
+// Session timer — updates every second
+useEffect(() => {
+  const timer = setInterval(() => {
+    setElapsed(Math.floor((Date.now() - sessionStart) / 1000));
+  }, 1000);
+  return () => clearInterval(timer);
+}, [sessionStart]);
+
+
   // ── Send behavioral data every 30 seconds ─────────────────────
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -146,7 +163,8 @@ export default function App() {
       };
 
       try {
-        const res = await axios.post(`${API}/predict/focus-state`, payload);
+  setPredicting(true);
+  const res = await axios.post(`${API}/predict/focus-state`, payload);
         setFocusState(res.data.focusState   || 'Focused');
         setAdaptations(res.data.adaptations || []);
         setConfidence(res.data.confidence);
@@ -160,6 +178,7 @@ export default function App() {
           adaptationsApplied: res.data.adaptations || [],
         });
       } catch { /* silent — backend offline */ }
+  finally { setPredicting(false); }
 
       bData.current.accSamples  = [];
       bData.current.scrollCount = 0;
@@ -229,6 +248,12 @@ export default function App() {
     fontSize:'1em', fontWeight:600,
   };
 
+const formatTime = (seconds) => {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+};
+
   // ══════════════════════════════════════════════════
   // ONBOARDING CHECK
   // ══════════════════════════════════════════════════
@@ -249,9 +274,14 @@ export default function App() {
 
       {/* ── TOP BAR ── */}
       <div style={topBarStyle}>
-        <span style={{fontWeight:700, color:theme.accent, fontSize:'1.1em'}}>
-          AUI Framework
-        </span>
+        <div style={{display:'flex', flexDirection:'column'}}>
+  <span style={{fontWeight:700, color:theme.accent, fontSize:'1.1em'}}>
+    AUI Framework
+  </span>
+  <span style={{fontSize:'0.75em', color:theme.text+'77'}}>
+    Session: {formatTime(elapsed)}
+  </span>
+</div>
         <div style={{display:'flex', gap:'10px', alignItems:'center', flexWrap:'wrap'}}>
           <span style={{
             padding:'4px 14px', borderRadius:'20px',
@@ -260,8 +290,8 @@ export default function App() {
             color:      STATE_COLORS[focusState],
             border:    `1px solid ${STATE_COLORS[focusState]}55`,
           }}>
-            ● {focusState}
-            {confidence && ` (${(confidence*100).toFixed(0)}%)`}
+             {predicting ? '⟳ Analyzing...' : `● ${focusState}`}
+{!predicting && confidence && ` (${(confidence*100).toFixed(0)}%)`}
           </span>
           <button
             onClick={() => setShowSettings(s=>!s)}
@@ -657,6 +687,15 @@ export default function App() {
                 </div>
               ))}
             </div>
+
+{/* Neurotype statistics */}
+<NeurotypeStats
+  theme={theme}
+  neurotype={neurotype}
+  adaptations={adaptations}
+  focusState={focusState}
+  elapsed={elapsed}
+/>
 
             {/* ── MAIN CONTENT CARD ── */}
             <div style={cardStyle}>
