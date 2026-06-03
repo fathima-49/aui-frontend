@@ -1,5 +1,4 @@
 import NeurotypeStats from './NeurotypeStats';
-import Spinner from './Spinner';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Dashboard from './Dashboard';
