@@ -273,8 +273,7 @@ const formatTime = (seconds) => {
     <div style={rootStyle}>
 
       {/* ── TOP BAR ── */}
-      <div style={topBarStyle}>
-        <div style={{display:'flex', flexDirection:'column'}}>
+      <div style={{display:'flex', flexDirection:'column'}}>
   <span style={{fontWeight:700, color:theme.accent, fontSize:'1.1em'}}>
     AUI Framework
   </span>
