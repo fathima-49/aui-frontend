@@ -273,14 +273,15 @@ const formatTime = (seconds) => {
     <div style={rootStyle}>
 
       {/* ── TOP BAR ── */}
-      <div style={{display:'flex', flexDirection:'column'}}>
-  <span style={{fontWeight:700, color:theme.accent, fontSize:'1.1em'}}>
-    AUI Framework
-  </span>
-  <span style={{fontSize:'0.75em', color:theme.text+'77'}}>
-    Session: {formatTime(elapsed)}
-  </span>
-</div>
+      <div style={topBarStyle}>
+        <div style={{display:'flex', flexDirection:'column'}}>
+          <span style={{fontWeight:700, color:theme.accent, fontSize:'1.1em'}}>
+            AUI Framework
+          </span>
+          <span style={{fontSize:'0.75em', color:theme.text+'77'}}>
+            Session: {formatTime(elapsed)}
+          </span>
+        </div>
         <div style={{display:'flex', gap:'10px', alignItems:'center', flexWrap:'wrap'}}>
           <span style={{
             padding:'4px 14px', borderRadius:'20px',
@@ -289,8 +290,8 @@ const formatTime = (seconds) => {
             color:      STATE_COLORS[focusState],
             border:    `1px solid ${STATE_COLORS[focusState]}55`,
           }}>
-             {predicting ? '⟳ Analyzing...' : `● ${focusState}`}
-{!predicting && confidence && ` (${(confidence*100).toFixed(0)}%)`}
+            {predicting ? '⟳ Analyzing...' : `● ${focusState}`}
+            {!predicting && confidence && ` (${(confidence*100).toFixed(0)}%)`}
           </span>
           <button
             onClick={() => setShowSettings(s=>!s)}
@@ -319,7 +320,6 @@ const formatTime = (seconds) => {
           </button>
         </div>
       </div>
-
       {/* ── MAIN CONTENT ── */}
       <div style={{
         maxWidth: isFocus ? '700px' : '1000px',
