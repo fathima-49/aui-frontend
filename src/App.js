@@ -484,7 +484,7 @@ const formatTime = (seconds) => {
             SUS + NASA-TLX usability forms
         ══════════════════════════════════════════ */}
         {activeTab === 'evaluation' && (
-          <Evaluation userId={userId} theme={theme} />
+          <Evaluation userId={userId} theme={theme} neurotype={neurotype} />
         )}
 
         {/* ══════════════════════════════════════════
