@@ -362,7 +362,12 @@ const formatTime = (seconds) => {
             ANALYTICS TAB
         ══════════════════════════════════════════ */}
         {activeTab === 'dashboard' && (
-          <Dashboard userId={userId} theme={theme} />
+          <Dashboard
+  userId={userId}
+  theme={theme}
+  currentState={focusState}
+  currentConfidence={confidence}
+/>
         )}
 
         {/* ══════════════════════════════════════════
