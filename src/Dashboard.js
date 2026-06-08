@@ -181,7 +181,7 @@ function HourlyHeatmap({ sessions, theme }) {
 function ResearchInsights({ sessions, stateCounts, avgEngagement, theme }) {
   const total       = sessions.length || 1;
   const focusPct    = Math.round(stateCounts.Focused / total * 100);
-  const distPct     = Math.round(stateCounts.Distracted / total * 100);
+  
   const overPct     = Math.round(stateCounts.Overstimulated / total * 100);
   const adaptCounts = {};
   sessions.forEach(s => {
