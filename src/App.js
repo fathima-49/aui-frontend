@@ -1,3 +1,4 @@
+import AdaptationDemo from './AdaptationDemo';
 import NeurotypeStats from './NeurotypeStats';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -335,9 +336,10 @@ const formatTime = (seconds) => {
         }}>
           {[
             { key:'home',            label:'Interface'     },
-            { key:'dashboard',       label:'Analytics'     },
-            { key:'accessibility',   label:'Accessibility' },
-            { key:'evaluation',      label:'Evaluation'    },
+{ key:'dashboard',       label:'Analytics'     },
+{ key:'accessibility',   label:'Accessibility' },
+{ key:'evaluation',      label:'Evaluation'    },
+{ key:'demo',            label:'Demo'          },
           ].map(tab => (
             <button
               key={tab.key}
@@ -486,6 +488,9 @@ const formatTime = (seconds) => {
         {activeTab === 'evaluation' && (
           <Evaluation userId={userId} theme={theme} neurotype={neurotype} />
         )}
+        {activeTab === 'demo' && (
+  <AdaptationDemo theme={theme} neurotype={neurotype} />
+)}
 
         {/* ══════════════════════════════════════════
             HOME TAB
