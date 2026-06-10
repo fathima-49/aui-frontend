@@ -18,7 +18,7 @@ const SUS_QUESTIONS = [
 
 const NASA_QUESTIONS = [
   { label: 'Mental demand',   desc: 'How much thinking and deciding was required?' },
-  { label: 'Physical demand', desc: 'How much physical activity was required?' },
+  { label: 'Interface complexity', desc: 'How complex did the interface feel to navigate?' },
   { label: 'Temporal demand', desc: 'How much time pressure did you feel?' },
   { label: 'Performance',     desc: 'How successful were you at accomplishing your goals?' },
   { label: 'Effort',          desc: 'How hard did you have to work to accomplish your level of performance?' },

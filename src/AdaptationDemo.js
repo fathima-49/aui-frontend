@@ -171,20 +171,7 @@ function NeurotypePanel({ type, config, highlighted, compact }) {
           ))}
         </div>
 
-        {/* ADHD: progress bar */}
-        {type === 'ADHD' && (
-          <div style={{ marginBottom: '12px' }}>
-            <div style={{ fontSize: '11px', color: config.color,
-                          fontWeight: 600, marginBottom: '4px' }}>
-              Reading progress
-            </div>
-            <div style={{ height: '6px', borderRadius: '3px',
-                          background: config.color + '22', overflow: 'hidden' }}>
-              <div style={{ width: '35%', height: '100%',
-                            background: config.color, borderRadius: '3px' }}/>
-            </div>
-          </div>
-        )}
+       
 
         {/* Title */}
         <div style={{
@@ -201,10 +188,7 @@ function NeurotypePanel({ type, config, highlighted, compact }) {
         {/* Intro — ADHD chunks it */}
         {type === 'ADHD' ? (
           <div style={{ ...cardStyle, borderLeft: `3px solid ${config.color}` }}>
-            <div style={{ fontSize: '11px', color: config.color,
-                          fontWeight: 600, marginBottom: '4px' }}>
-              Section 1 of 3
-            </div>
+            
             {SAMPLE_CONTENT.intro}
           </div>
         ) : (
@@ -281,8 +265,8 @@ export default function AdaptationDemo({ theme, neurotype }) {
       {/* Header */}
       <div style={{ ...card, padding: '16px 20px' }}>
         <h2 style={{ color: theme.accent, margin: '0 0 6px', fontSize: '1.1em' }}>
-          Neurotype adaptation demo
-        </h2>
+  Interface preview
+</h2>
         <p style={{ color: theme.text + '88', margin: 0, fontSize: '0.88em' }}>
           See how the same content is rendered differently for each neurotype.
           This demonstrates the core adaptive capability of the AUI framework.
@@ -445,25 +429,7 @@ export default function AdaptationDemo({ theme, neurotype }) {
         </div>
       )}
 
-      {/* Research note */}
-      <div style={{
-        ...card, marginTop: '16px',
-        borderLeft: `4px solid ${theme.accent}`,
-        borderRadius: '0 12px 12px 0', padding: '14px 16px',
-      }}>
-        <div style={{ fontWeight: 600, color: theme.accent,
-                      fontSize: '0.88em', marginBottom: '6px' }}>
-          Research significance
-        </div>
-        <div style={{ fontSize: '0.85em', color: theme.text, lineHeight: 1.6 }}>
-          This demo illustrates the AUI framework's core contribution — automatic
-          content adaptation based on neurotype detection. The same information
-          is presented with different typography, layout, spacing, and structural
-          organisation to reduce cognitive load for each user group. This approach
-          is validated using the Engagnition dataset (57 ASD participants) and
-          evaluated through SUS and NASA-TLX usability metrics.
-        </div>
-      </div>
+      
     </div>
   );
 }

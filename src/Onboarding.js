@@ -36,35 +36,35 @@ const STEPS = [
   { title: 'How would you describe yourself?', field: 'neurotype', type: 'neurotype' },
   { title: 'What is your preferred reading environment?', field: 'colorTheme', type: 'choice',
     options: [
-      { value: 'default',       label: 'Bright white',    desc: 'Standard light background',     color: '#4A90E2' },
-      { value: 'soft_tones',    label: 'Warm soft tones', desc: 'Cream/beige — easy on eyes',    color: '#D4956A' },
-      { value: 'dark_mode',     label: 'Dark mode',       desc: 'Dark background, light text',   color: '#7F77DD' },
-      { value: 'high_contrast', label: 'High contrast',   desc: 'Maximum contrast for clarity',  color: '#FFD700' },
+      { value: 'default',       label: 'Bright white',    desc: 'Standard light background',    color: '#4A90E2' },
+      { value: 'soft_tones',    label: 'Warm soft tones', desc: 'Cream/beige — easy on eyes',   color: '#D4956A' },
+      { value: 'dark_mode',     label: 'Dark mode',       desc: 'Dark background, light text',  color: '#7F77DD' },
+      { value: 'high_contrast', label: 'High contrast',   desc: 'Maximum contrast for clarity', color: '#FFD700' },
     ],
   },
   { title: 'Which font feels easiest to read?', field: 'fontStyle', type: 'choice',
     options: [
-      { value: 'Arial',        label: 'Arial',        desc: 'Clean and simple',            color: '#4A90E2' },
+      { value: 'Arial',        label: 'Arial',        desc: 'Clean and simple',             color: '#4A90E2' },
       { value: 'OpenDyslexic', label: 'OpenDyslexic', desc: 'Designed for dyslexic readers', color: '#7F77DD' },
-      { value: 'Verdana',      label: 'Verdana',      desc: 'Wider letter spacing',        color: '#1D9E75' },
-      { value: 'Georgia',      label: 'Georgia',      desc: 'Serif — traditional feel',    color: '#BA7517' },
+      { value: 'Verdana',      label: 'Verdana',      desc: 'Wider letter spacing',         color: '#1D9E75' },
+      { value: 'Georgia',      label: 'Georgia',      desc: 'Serif — traditional feel',     color: '#BA7517' },
     ],
   },
   { title: 'How sensitive are you to animations?', field: 'animationSpeed', type: 'choice',
     options: [
-      { value: 'normal', label: 'Normal',        desc: 'Standard animations',  color: '#4A90E2' },
-      { value: 'slow',   label: 'Slow',          desc: 'Gentler transitions',  color: '#1D9E75' },
-      { value: 'none',   label: 'No animations', desc: 'All motion disabled',  color: '#D85A30' },
+      { value: 'normal', label: 'Normal',        desc: 'Standard animations', color: '#4A90E2' },
+      { value: 'slow',   label: 'Slow',          desc: 'Gentler transitions', color: '#1D9E75' },
+      { value: 'none',   label: 'No animations', desc: 'All motion disabled', color: '#D85A30' },
     ],
   },
   { title: 'What is your preferred text size?', field: 'fontSize', type: 'slider', min: 12, max: 28, default: 16 },
 ];
 
 const FONTS = {
-  Arial: 'Arial, sans-serif',
+  Arial:        'Arial, sans-serif',
   OpenDyslexic: '"OpenDyslexic", Arial, sans-serif',
-  Verdana: 'Verdana, sans-serif',
-  Georgia: 'Georgia, serif',
+  Verdana:      'Verdana, sans-serif',
+  Georgia:      'Georgia, serif',
 };
 
 export default function Onboarding({ userId, onComplete }) {
@@ -81,7 +81,6 @@ export default function Onboarding({ userId, onComplete }) {
   const progress = Math.round((step / (STEPS.length - 1)) * 100);
   const preview  = NEUROTYPE_PREVIEWS[answers.neurotype];
 
-  // Animate step transition
   const goTo = (nextStep) => {
     setVisible(false);
     setTimeout(() => {
@@ -170,8 +169,10 @@ export default function Onboarding({ userId, onComplete }) {
 
         {/* Progress bar */}
         <div style={{ marginBottom: '28px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between',
-                        fontSize: '0.82em', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
+          <div style={{
+            display: 'flex', justifyContent: 'space-between',
+            fontSize: '0.82em', color: 'var(--color-text-secondary)', marginBottom: '8px',
+          }}>
             <span>Step {step + 1} of {STEPS.length}</span>
             <span style={{ color: accent, fontWeight: 600 }}>{progress}% complete</span>
           </div>
@@ -212,11 +213,11 @@ export default function Onboarding({ userId, onComplete }) {
                 and automatically adapts the interface to support your focus and comfort.
               </div>
               {[
-                { icon: '🎨', text: 'Personalized color themes and fonts' },
-                { icon: '🧠', text: 'AI-powered cognitive state detection' },
-                { icon: '⚡', text: 'Animation control for sensory sensitivity' },
-                { icon: '🎯', text: 'Focus mode to reduce distractions' },
-                { icon: '📊', text: 'Usability evaluation tools built in' },
+                { text: 'Personalized color themes and fonts' },
+                { text: 'Cognitive state detection using behavioral signals' },
+                { text: 'Animation control for sensory sensitivity' },
+                { text: 'Focus mode to reduce distractions' },
+                { text: 'Usability evaluation tools built in' },
               ].map(item => (
                 <div key={item.text} style={{
                   display: 'flex', alignItems: 'center', gap: '12px',
@@ -225,7 +226,10 @@ export default function Onboarding({ userId, onComplete }) {
                   borderRadius: '8px', fontSize: '0.92em',
                   border: '1px solid var(--color-border-tertiary)',
                 }}>
-                  <span style={{ fontSize: '1.1em' }}>{item.icon}</span>
+                  <div style={{
+                    width: '6px', height: '6px', borderRadius: '50%',
+                    background: accent, flexShrink: 0,
+                  }}/>
                   <span style={{ color: 'var(--color-text-primary)' }}>{item.text}</span>
                 </div>
               ))}
@@ -235,15 +239,18 @@ export default function Onboarding({ userId, onComplete }) {
           {/* ── NEUROTYPE STEP ── */}
           {current.type === 'neurotype' && (
             <div style={{ marginBottom: '24px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '16px' }}>
+              <div style={{
+                display: 'grid', gridTemplateColumns: '1fr 1fr',
+                gap: '10px', marginBottom: '16px',
+              }}>
                 {[
-                  { value: 'Neurotypical', label: 'Neurotypical',           desc: 'No diagnosed condition' },
-                  { value: 'ASD',          label: 'Autism (ASD)',           desc: 'Autism spectrum disorder' },
-                  { value: 'ADHD',         label: 'ADHD',                   desc: 'Attention deficit disorder' },
-                  { value: 'Dyslexia',     label: 'Dyslexia',               desc: 'Reading differences' },
+                  { value: 'Neurotypical', label: 'Neurotypical',              desc: 'No diagnosed condition' },
+                  { value: 'ASD',          label: 'Autism (ASD)',              desc: 'Autism spectrum disorder' },
+                  { value: 'ADHD',         label: 'ADHD',                      desc: 'Attention deficit disorder' },
+                  { value: 'Dyslexia',     label: 'Dyslexia',                  desc: 'Reading differences' },
                   { value: 'Other',        label: 'Other / Prefer not to say', desc: '' },
                 ].map(opt => {
-                  const p = NEUROTYPE_PREVIEWS[opt.value];
+                  const p        = NEUROTYPE_PREVIEWS[opt.value];
                   const selected = answers.neurotype === opt.value;
                   return (
                     <button key={opt.value}
@@ -255,7 +262,10 @@ export default function Onboarding({ userId, onComplete }) {
                         textAlign: 'left', transition: 'all 0.2s ease',
                         gridColumn: opt.value === 'Other' ? 'span 2' : 'span 1',
                       }}>
-                      <div style={{ fontWeight: 600, color: selected ? p.color : 'var(--color-text-primary)', fontSize: '0.95em' }}>
+                      <div style={{
+                        fontWeight: 600, fontSize: '0.95em',
+                        color: selected ? p.color : 'var(--color-text-primary)',
+                      }}>
                         {opt.label}
                       </div>
                       {opt.desc && (
@@ -365,7 +375,7 @@ export default function Onboarding({ userId, onComplete }) {
             </button>
           ) : <div/>}
           <button onClick={next} disabled={saving} style={btnPrimary}>
-            {saving ? 'Saving...' : isLast ? '🚀 Start using AUI' : 'Continue →'}
+            {saving ? 'Saving...' : isLast ? 'Start using AUI' : 'Continue'}
           </button>
         </div>
 

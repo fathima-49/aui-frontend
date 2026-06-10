@@ -181,7 +181,6 @@ function HourlyHeatmap({ sessions, theme }) {
 function ResearchInsights({ sessions, stateCounts, avgEngagement, theme }) {
   const total       = sessions.length || 1;
   const focusPct    = Math.round(stateCounts.Focused / total * 100);
-  
   const overPct     = Math.round(stateCounts.Overstimulated / total * 100);
   const adaptCounts = {};
   sessions.forEach(s => {
@@ -192,38 +191,35 @@ function ResearchInsights({ sessions, stateCounts, avgEngagement, theme }) {
   const totalAdapts = Object.values(adaptCounts).reduce((a, b) => a + b, 0);
   const topAdapt    = Object.entries(adaptCounts).sort((a, b) => b[1] - a[1])[0];
 
-  const insights = [];
-  if (focusPct >= 70) insights.push({ icon: '✅', color: '#1D9E75',
-    text: `High focus rate (${focusPct}%) — adaptive UI is supporting concentration effectively.` });
-  else if (focusPct < 40) insights.push({ icon: '⚠️', color: '#BA7517',
-    text: `Focus rate is low (${focusPct}%) — consider enabling focus mode or adjusting settings.` });
-  if (overPct > 20) insights.push({ icon: '🔴', color: '#D85A30',
-    text: `Overstimulation detected in ${overPct}% of sessions — reducing animations may help.` });
-  if (totalAdapts > 0) insights.push({ icon: '🤖', color: theme.accent,
-    text: `AI applied ${totalAdapts} total adaptations across ${total} sessions — system is actively adapting.` });
-  if (topAdapt) insights.push({ icon: '📌', color: theme.accent,
-    text: `Most needed adaptation: "${topAdapt[0].replace(/_/g, ' ')}" (triggered ${topAdapt[1]} times).` });
-  if (parseFloat(avgEngagement) > 2) insights.push({ icon: '💡', color: '#1D9E75',
-    text: `Average engagement of ${avgEngagement}/3 indicates good user interaction levels.` });
-  if (total >= 10) insights.push({ icon: '📊', color: theme.accent,
-    text: `${total} sessions recorded — sufficient data for meaningful research analysis.` });
-
-  if (!insights.length) return (
-    <div style={{ fontSize: '0.85em', color: theme.text + '66', textAlign: 'center', padding: '16px' }}>
-      Use the app more to generate research insights.
-    </div>
-  );
+  const rows = [
+    { label: 'Total sessions recorded',     value: total },
+    { label: 'Focus rate',                   value: focusPct + '%',
+      color: focusPct >= 70 ? '#1D9E75' : focusPct < 40 ? '#D85A30' : '#BA7517' },
+    { label: 'Overstimulation rate',         value: overPct + '%',
+      color: overPct > 20 ? '#D85A30' : '#1D9E75' },
+    { label: 'Total adaptations applied',    value: totalAdapts },
+    { label: 'Most frequent adaptation',
+      value: topAdapt ? topAdapt[0].replace(/_/g, ' ') : '—' },
+    { label: 'Average engagement score',     value: avgEngagement + ' / 3' },
+  ];
 
   return (
     <div>
-      {insights.map((ins, i) => (
+      {rows.map((row, i) => (
         <div key={i} style={{
-          display: 'flex', gap: '10px', alignItems: 'flex-start',
-          padding: '10px 12px', borderRadius: '8px', marginBottom: '8px',
-          background: ins.color + '10', border: `1px solid ${ins.color}25`,
+          display: 'flex', justifyContent: 'space-between',
+          alignItems: 'center', padding: '10px 0',
+          borderBottom: `1px solid ${theme.accent}15`,
         }}>
-          <span style={{ fontSize: '1em', flexShrink: 0, marginTop: '1px' }}>{ins.icon}</span>
-          <span style={{ fontSize: '0.85em', color: theme.text, lineHeight: 1.5 }}>{ins.text}</span>
+          <span style={{ fontSize: '0.87em', color: theme.text + '99' }}>
+            {row.label}
+          </span>
+          <span style={{
+            fontSize: '0.9em', fontWeight: 600,
+            color: row.color || theme.accent,
+          }}>
+            {row.value}
+          </span>
         </div>
       ))}
     </div>
@@ -324,9 +320,13 @@ export default function Dashboard({ userId, theme, currentState, currentConfiden
   };
 
   const card = {
-    background: theme.surface, border: `1px solid ${theme.accent}33`,
-    borderRadius: '12px', padding: '16px', marginBottom: '16px',
-  };
+  background: theme.surface, border: `1px solid ${theme.accent}33`,
+  borderRadius: '12px', padding: '16px', marginBottom: '16px',
+};
+const flatCard = {
+  borderBottom: `1px solid ${theme.accent}22`,
+  padding: '16px 0', marginBottom: '0',
+};
 
   const total = sessions.length || 1;
 
@@ -359,10 +359,13 @@ export default function Dashboard({ userId, theme, currentState, currentConfiden
         <p style={{ color: theme.text + '88' }}>Loading session data...</p>
       ) : sessions.length === 0 ? (
         <div style={{ ...card, textAlign: 'center', padding: '32px' }}>
-          <div style={{ fontSize: '2em', marginBottom: '12px' }}>📊</div>
-          <div style={{ color: theme.text, fontWeight: 600, marginBottom: '8px' }}>
-            No sessions recorded yet
-          </div>
+          <div style={{
+  width: '40px', height: '4px', borderRadius: '2px',
+  background: theme.accent + '44', margin: '0 auto 16px',
+}}/>
+<div style={{ color: theme.text, fontWeight: 600, marginBottom: '8px' }}>
+  No sessions recorded yet
+</div>
           <div style={{ color: theme.text + '88', fontSize: '0.9em' }}>
             Stay on the Interface tab for 30 seconds — the AI will analyze
             your behavior and record a session automatically.
@@ -429,7 +432,7 @@ export default function Dashboard({ userId, theme, currentState, currentConfiden
                 <div>
                   <div style={{ fontSize: '0.88em', fontWeight: 600,
                                 color: theme.accent, marginBottom: '12px' }}>
-                    Live AI prediction
+                    Current state
                   </div>
                   <ConfidenceGauge
                     confidence={currentConfidence}
@@ -464,13 +467,15 @@ export default function Dashboard({ userId, theme, currentState, currentConfiden
                   })}
                 </div>
               </div>
-              <div style={card}>
-                <div style={{ fontSize: '0.88em', fontWeight: 600,
-                              color: theme.accent, marginBottom: '12px' }}>
-                  Most triggered AI adaptations
-                </div>
-                <AdaptationFrequency sessions={sessions} theme={theme} />
-              </div>
+              <div style={{ ...card, background: 'transparent',
+              border: 'none', borderTop: `1px solid ${theme.accent}22`,
+              paddingTop: '16px' }}>
+  <div style={{ fontSize: '0.88em', fontWeight: 500,
+                color: theme.text + '99', marginBottom: '12px' }}>
+    Active adaptations
+  </div>
+  <AdaptationFrequency sessions={sessions} theme={theme} />
+</div>
               <div style={card}>
                 <div style={{ fontSize: '0.88em', fontWeight: 600,
                               color: theme.accent, marginBottom: '12px' }}>
