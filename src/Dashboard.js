@@ -323,10 +323,7 @@ export default function Dashboard({ userId, theme, currentState, currentConfiden
   background: theme.surface, border: `1px solid ${theme.accent}33`,
   borderRadius: '12px', padding: '16px', marginBottom: '16px',
 };
-const flatCard = {
-  borderBottom: `1px solid ${theme.accent}22`,
-  padding: '16px 0', marginBottom: '0',
-};
+
 
   const total = sessions.length || 1;
 
