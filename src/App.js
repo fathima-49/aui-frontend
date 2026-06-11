@@ -1,5 +1,4 @@
 import AdaptationDemo from './AdaptationDemo';
-import NeurotypeStats from './NeurotypeStats';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Dashboard from './Dashboard';
@@ -292,69 +291,65 @@ const formatTime = (seconds) => {
     <div style={rootStyle}>
 
       {/* ── TOP BAR ── */}
-      <div style={topBarStyle}>
-        <div style={{display:'flex', flexDirection:'column'}}>
-          <span style={{fontWeight:700, color:theme.accent, fontSize:'1.1em'}}>
-            AUI Framework
-          </span>
-          <span style={{fontSize:'0.75em', color:theme.text+'77'}}>
-            Session: {formatTime(elapsed)}
-          </span>
-        </div>
-        <div style={{display:'flex', gap:'10px', alignItems:'center', flexWrap:'wrap'}}>
-          <span style={{
-            padding:'4px 14px', borderRadius:'20px',
-            fontSize:'0.85em', fontWeight:600,
-            background: STATE_COLORS[focusState]+'22',
-            color:      STATE_COLORS[focusState],
-            border:    `1px solid ${STATE_COLORS[focusState]}55`,
-          }}>
-            {predicting ? '⟳ Analyzing...' : `● ${focusState}`}
-            {!predicting && confidence && ` (${(confidence*100).toFixed(0)}%)`}
-          </span>
-          <button
-            onClick={() => setShowSettings(s=>!s)}
-            style={{
-              background:'none',
-              border:`1px solid ${theme.accent}66`,
-              borderRadius:'8px', padding:'4px 12px',
-              color:theme.text, cursor:'pointer', fontSize:'0.85em',
-            }}
-          >
-            {showSettings ? 'Hide settings' : 'Show settings'}
-          </button>
-          <button
-  onClick={() => {
-    localStorage.removeItem('aui_onboarded');
-    setOnboarded(false);
-  }}
-  style={{
-    background:'none',
-    border:`1px solid ${theme.accent}33`,
-    borderRadius:'8px', padding:'4px 10px',
-    color:theme.text+'77', cursor:'pointer', fontSize:'0.78em',
-  }}
->
-  Reset onboarding
-</button>
-<button
-  onClick={() => {
-    if (window.confirm('This will clear all local data and start a new session. Continue?')) {
-      localStorage.clear();
-      window.location.reload();
-    }
-  }}
-  style={{
-    background:'none',
-    border:`1px solid ${theme.accent}33`,
-    borderRadius:'8px', padding:'4px 10px',
-    color:theme.text+'77', cursor:'pointer', fontSize:'0.78em',
-  }}
->
-  New session
-</button>
-        </div>
-      </div>
+<div style={topBarStyle}>
+  <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <span style={{ fontWeight: 700, color: theme.accent, fontSize: '1.1em' }}>
+      AUI
+    </span>
+    <span style={{ fontSize: '0.75em', color: theme.text + '77' }}>
+      Session: {formatTime(elapsed)}
+    </span>
+  </div>
+  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+    <span style={{
+      padding: '4px 14px', borderRadius: '20px',
+      fontSize: '0.85em', fontWeight: 600,
+      background: STATE_COLORS[focusState] + '22',
+      color: STATE_COLORS[focusState],
+      border: `1px solid ${STATE_COLORS[focusState]}55`,
+    }}>
+      {predicting ? 'Analyzing...' : `● ${focusState}`}
+      {!predicting && confidence && ` (${(confidence * 100).toFixed(0)}%)`}
+    </span>
+    <button
+      onClick={() => setShowSettings(s => !s)}
+      style={{
+        background: 'none', border: `1px solid ${theme.accent}66`,
+        borderRadius: '8px', padding: '4px 12px',
+        color: theme.text, cursor: 'pointer', fontSize: '0.85em',
+      }}
+    >
+      {showSettings ? 'Hide settings' : 'Settings'}
+    </button>
+    <div style={{ display: 'flex', gap: '6px' }}>
+      <button
+        onClick={() => { localStorage.removeItem('aui_onboarded'); setOnboarded(false); }}
+        style={{
+          background: 'none', border: `1px solid ${theme.accent}33`,
+          borderRadius: '8px', padding: '4px 10px',
+          color: theme.text + '77', cursor: 'pointer', fontSize: '0.78em',
+        }}
+      >
+        Change preferences
+      </button>
+      <button
+        onClick={() => {
+          if (window.confirm('This creates a completely new user session. Continue?')) {
+            localStorage.clear();
+            window.location.reload();
+          }
+        }}
+        style={{
+          background: 'none', border: `1px solid ${theme.accent}33`,
+          borderRadius: '8px', padding: '4px 10px',
+          color: theme.text + '77', cursor: 'pointer', fontSize: '0.78em',
+        }}
+      >
+        New session
+      </button>
+    </div>
+  </div>
+</div>
       {/* ── MAIN CONTENT ── */}
       <div style={{
         maxWidth: isFocus ? '700px' : '1000px',
@@ -656,10 +651,7 @@ const formatTime = (seconds) => {
                   )}
                 </div>
 
-                {/* WCAG checker inside settings panel too */}
-                <div style={{marginTop:'20px'}}>
-                  <AccessibilityChecker theme={theme} />
-                </div>
+                
 
               </div>
             )}
@@ -700,128 +692,98 @@ const formatTime = (seconds) => {
             )}
 
             {/* ── STATS CARDS ── */}
-            <div style={{
-              display:'grid',
-              gridTemplateColumns: isFocus
-                ? '1fr 1fr'
-                : 'repeat(auto-fit, minmax(150px, 1fr))',
-              gap:'14px', marginBottom:'20px',
-            }}>
-              {[
-                { label:'Current state', value: focusState  },
-                { label:'Neurotype',     value: neurotype   },
-                { label:'Color theme',   value: colorTheme  },
-                { label:'Font',          value: fontStyle   },
-              ]
-              .filter((_, i) => !isFocus || i < 2)
-              .map(item => (
-                <div key={item.label} style={{
-                  ...cardStyle, marginBottom:0, textAlign:'center'
-                }}>
-                  <div style={{
-                    fontWeight:700, color:theme.accent,
-                    fontSize:'1.05em', marginBottom:'4px'
-                  }}>
-                    {item.value}
-                  </div>
-                  <div style={{fontSize:'0.82em', color:theme.text+'aa'}}>
-                    {item.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+<div style={{
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+  gap: '14px', marginBottom: '20px',
+}}>
+  {[
+    { label: 'Cognitive state', value: focusState,
+      color: STATE_COLORS[focusState] },
+    { label: 'Neurotype',       value: neurotype,
+      color: theme.accent },
+    { label: 'Adaptations active', value: adaptations.length,
+      color: theme.accent },
+    { label: 'Session time',    value: formatTime(elapsed),
+      color: theme.accent },
+  ].map(item => (
+    <div key={item.label} style={{
+      ...cardStyle, marginBottom: 0, textAlign: 'center'
+    }}>
+      <div style={{
+        fontWeight: 700, color: item.color,
+        fontSize: '1.05em', marginBottom: '4px'
+      }}>
+        {item.value}
+      </div>
+      <div style={{ fontSize: '0.82em', color: theme.text + 'aa' }}>
+        {item.label}
+      </div>
+    </div>
+  ))}
+</div>
 
-{/* Neurotype statistics */}
-<NeurotypeStats
-  theme={theme}
-  neurotype={neurotype}
-  adaptations={adaptations}
-  focusState={focusState}
-  elapsed={elapsed}
-/>
+
 
             {/* ── MAIN CONTENT CARD ── */}
-            <div style={cardStyle}>
-              <h2 style={{color:theme.accent, marginTop:0}}>
-                Welcome to the AUI Framework
-              </h2>
-              <p>
-                This interface adapts to your cognitive and sensory preferences
-                in real time. The system monitors your interaction behavior
-                using physiological signals and applies the most helpful
-                adaptations automatically using machine learning.
-              </p>
-              {!isFocus && (
-                <p>
-                  The framework is evaluated using the Engagnition dataset —
-                  a real dataset of 57 children with Autism Spectrum Disorder.
-                  Engagement, gaze, and physiological data train the model.
-                </p>
-              )}
-              <div style={{
-                display:'grid',
-                gridTemplateColumns:'repeat(auto-fit, minmax(155px, 1fr))',
-                gap:'12px', marginTop:'20px'
-              }}>
-                {[
-                  { label:'ML models',    value:'RF · SVM · MLP · XGB' },
-                  { label:'Data signals', value:'GSR · Gaze · Movement' },
-                  { label:'Color themes', value:'4 options'             },
-                  { label:'Font styles',  value:'4 options'             },
-                  { label:'Neurotypes',   value:'4 supported'           },
-                  { label:'Dataset',      value:'Engagnition (57 ASD)'  },
-                ].map(item => (
-                  <div key={item.label} style={{
-                    background:theme.accent+'12',
-                    border:`1px solid ${theme.accent}33`,
-                    borderRadius:'10px', padding:'14px', textAlign:'center'
-                  }}>
-                    <div style={{fontWeight:700, color:theme.accent,
-                                 fontSize:'1em'}}>
-                      {item.value}
-                    </div>
-                    <div style={{marginTop:'4px', fontSize:'0.82em',
-                                 color:theme.text+'bb'}}>
-                      {item.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+<div style={cardStyle}>
+  <h2 style={{ color: theme.accent, marginTop: 0 }}>
+    Welcome back
+  </h2>
+  <p style={{ color: theme.text, lineHeight: 1.7, marginTop: 0 }}>
+    AUI monitors your interaction patterns and automatically adjusts
+    the interface to match your cognitive state and neurotype preferences.
+    Settings are saved to your profile and applied each time you return.
+  </p>
+  {adaptations.length > 0 && (
+    <div style={{
+      marginTop: '16px', padding: '12px 14px',
+      background: theme.accent + '10', borderRadius: '8px',
+      borderLeft: `3px solid ${theme.accent}`,
+    }}>
+      <div style={{ fontSize: '0.85em', fontWeight: 600,
+                    color: theme.accent, marginBottom: '8px' }}>
+        Currently active adaptations
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+        {adaptations.map(a => (
+          <span key={a} style={{
+            padding: '3px 10px', borderRadius: '12px',
+            fontSize: '0.8em', fontWeight: 500,
+            background: theme.accent + '20', color: theme.accent,
+          }}>
+            {a.replace(/_/g, ' ')}
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
 
             {/* ── READING AREA ── */}
-            <div style={{
-              ...cardStyle,
-              lineHeight: fontStyle === 'OpenDyslexic' ? 2.1 : 1.85
-            }}>
-              <h3 style={{color:theme.accent, marginTop:0}}>
-                About neurodiversity
-              </h3>
-              <p>
-                Neurodiversity acknowledges that cognitive variations such as
-                Autism Spectrum Disorder, ADHD, Dyslexia, and Dyscalculia
-                are natural differences in human cognition rather than
-                deficiencies. Most digital interfaces are designed for
-                neurotypical users, creating accessibility barriers.
-              </p>
-              {!isFocus && (
-                <>
-                  <p>
-                    This adaptive user interface framework allows you to
-                    personalize visual and interaction elements. The system
-                    uses machine learning trained on real physiological data
-                    to predict your cognitive state and apply helpful
-                    adaptations automatically.
-                  </p>
-                  <p>
-                    Using a participatory design approach, neurodiverse users
-                    are actively involved in both the design and testing
-                    phases to ensure the system is relevant, practical,
-                    and inclusive.
-                  </p>
-                </>
-              )}
-            </div>
+<div style={{
+  ...cardStyle,
+  lineHeight: fontStyle === 'OpenDyslexic' ? 2.1 : 1.85,
+}}>
+  <h3 style={{ color: theme.accent, marginTop: 0 }}>
+    How the interface adapts
+  </h3>
+  <p style={{ marginTop: 0 }}>
+    The system tracks your mouse movement, scroll patterns and
+    click frequency to estimate your current cognitive state.
+    Every 30 seconds a prediction is made and the interface
+    adjusts automatically — changing layout, spacing, animations
+    and color based on what your behavior suggests you need.
+  </p>
+  {!isFocus && (
+    <p>
+      You can also set your preferences manually in the settings
+      panel above. Manual settings and automatic adaptations work
+      together — the AI fills in the gaps your manual settings
+      do not cover.
+    </p>
+  )}
+</div>
 
           </>
         )}{/* end home tab */}
