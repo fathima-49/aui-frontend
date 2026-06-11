@@ -86,16 +86,15 @@ const [elapsed, setElapsed] = useState(0);
   const isFocus = focusMode || adaptations.includes('enable_focus_mode');
 
   // ── Onboarding complete ────────────────────────────────────────
-  const completeOnboarding = (answers) => {
-    setNeurotype(answers.neurotype);
-    setColorTheme(answers.colorTheme);
-    setFontStyle(answers.fontStyle);
-    setFontSize(answers.fontSize);
-    setAnimSpeed(answers.animationSpeed);
-    localStorage.setItem('aui_onboarded', 'true');
-    setOnboarded(true);
-  };
-
+  const completeOnboarding = async (answers) => {
+  setNeurotype(answers.neurotype);
+  setColorTheme(answers.colorTheme);
+  setFontStyle(answers.fontStyle);
+  setFontSize(answers.fontSize);
+  setAnimSpeed(answers.animationSpeed);
+  localStorage.setItem('aui_onboarded', 'true');
+  setOnboarded(true);
+};
   // ── Track mouse movement ───────────────────────────────────────
   useEffect(() => {
     const onMove = e => {
@@ -206,6 +205,7 @@ useEffect(() => {
   };
   // ── Load saved profile on startup ─────────────────────────────
 useEffect(() => {
+  if (!onboarded) return;
   const loadProfile = async () => {
     try {
       const res = await axios.get(`${API}/users/profile/${userId}`);
@@ -222,7 +222,7 @@ useEffect(() => {
     } catch { /* no saved profile yet */ }
   };
   loadProfile();
-}, [userId]); // eslint-disable-line
+}, [userId, onboarded]); // eslint-disable-line
 
   // ── Styles ─────────────────────────────────────────────────────
   const rootStyle = {
