@@ -204,6 +204,25 @@ useEffect(() => {
       setTimeout(() => setSaveMsg(''), 3000);
     }
   };
+  // ── Load saved profile on startup ─────────────────────────────
+useEffect(() => {
+  const loadProfile = async () => {
+    try {
+      const res = await axios.get(`${API}/users/profile/${userId}`);
+      const p   = res.data?.preferences;
+      const n   = res.data?.neurotype;
+      if (n) setNeurotype(n);
+      if (p) {
+        if (p.colorTheme)     setColorTheme(p.colorTheme);
+        if (p.fontStyle)      setFontStyle(p.fontStyle);
+        if (p.fontSize)       setFontSize(p.fontSize);
+        if (p.animationSpeed) setAnimSpeed(p.animationSpeed);
+        if (typeof p.focusMode === 'boolean') setFocusMode(p.focusMode);
+      }
+    } catch { /* no saved profile yet */ }
+  };
+  loadProfile();
+}, [userId]); // eslint-disable-line
 
   // ── Styles ─────────────────────────────────────────────────────
   const rootStyle = {
@@ -305,19 +324,35 @@ const formatTime = (seconds) => {
             {showSettings ? 'Hide settings' : 'Show settings'}
           </button>
           <button
-            onClick={() => {
-              localStorage.removeItem('aui_onboarded');
-              setOnboarded(false);
-            }}
-            style={{
-              background:'none',
-              border:`1px solid ${theme.accent}33`,
-              borderRadius:'8px', padding:'4px 10px',
-              color:theme.text+'77', cursor:'pointer', fontSize:'0.78em',
-            }}
-          >
-            Reset onboarding
-          </button>
+  onClick={() => {
+    localStorage.removeItem('aui_onboarded');
+    setOnboarded(false);
+  }}
+  style={{
+    background:'none',
+    border:`1px solid ${theme.accent}33`,
+    borderRadius:'8px', padding:'4px 10px',
+    color:theme.text+'77', cursor:'pointer', fontSize:'0.78em',
+  }}
+>
+  Reset onboarding
+</button>
+<button
+  onClick={() => {
+    if (window.confirm('This will clear all local data and start a new session. Continue?')) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  }}
+  style={{
+    background:'none',
+    border:`1px solid ${theme.accent}33`,
+    borderRadius:'8px', padding:'4px 10px',
+    color:theme.text+'77', cursor:'pointer', fontSize:'0.78em',
+  }}
+>
+  New session
+</button>
         </div>
       </div>
       {/* ── MAIN CONTENT ── */}
@@ -339,7 +374,7 @@ const formatTime = (seconds) => {
 { key:'dashboard',       label:'Analytics'     },
 { key:'accessibility',   label:'Accessibility' },
 { key:'evaluation',      label:'Evaluation'    },
-{ key:'demo',            label:'Demo'          },
+{ key:'demo',            label:'Adaptations'   },
           ].map(tab => (
             <button
               key={tab.key}

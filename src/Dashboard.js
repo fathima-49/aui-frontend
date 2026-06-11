@@ -337,20 +337,32 @@ export default function Dashboard({ userId, theme, currentState, currentConfiden
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between',
-                    alignItems: 'center', marginBottom: '16px' }}>
-        <h2 style={{ color: theme.accent, margin: 0, fontSize: '1.1em' }}>
-          Session analytics dashboard
-        </h2>
-        {sessions.length > 0 && (
-          <button onClick={() => exportSessionsCSV(sessions)} style={{
-            padding: '6px 14px', borderRadius: '8px', fontSize: '0.82em',
-            background: 'transparent', color: theme.accent,
-            border: `1px solid ${theme.accent}55`, cursor: 'pointer', fontWeight: 600,
-          }}>
-            Export CSV
-          </button>
-        )}
-      </div>
+              alignItems: 'center', marginBottom: '16px' }}>
+  <div>
+    <h2 style={{ color: theme.accent, margin: 0, fontSize: '1.1em' }}>
+      Session analytics dashboard
+    </h2>
+    {sessions.length > 0 && (() => {
+      const dates  = sessions.map(s => new Date(s.timestamp));
+      const oldest = new Date(Math.min(...dates)).toLocaleDateString([], { month: 'short', day: 'numeric' });
+      const newest = new Date(Math.max(...dates)).toLocaleDateString([], { month: 'short', day: 'numeric' });
+      return (
+        <div style={{ fontSize: '0.78em', color: theme.text + '66', marginTop: '4px' }}>
+          {oldest === newest ? oldest : `${oldest} — ${newest}`}
+        </div>
+      );
+    })()}
+  </div>
+  {sessions.length > 0 && (
+    <button onClick={() => exportSessionsCSV(sessions)} style={{
+      padding: '6px 14px', borderRadius: '8px', fontSize: '0.82em',
+      background: 'transparent', color: theme.accent,
+      border: `1px solid ${theme.accent}55`, cursor: 'pointer', fontWeight: 600,
+    }}>
+      Export CSV
+    </button>
+  )}
+</div>
 
       {loading ? (
         <p style={{ color: theme.text + '88' }}>Loading session data...</p>
