@@ -76,8 +76,7 @@ const [elapsed, setElapsed] = useState(0);
   });
 
   // ── Computed values ────────────────────────────────────────────
-  const activeThemeKey = adaptations.includes('high_contrast')
-    ? 'high_contrast' : colorTheme;
+  const activeThemeKey = colorTheme;
   const theme   = THEMES[activeThemeKey] || THEMES.default;
   const font    = FONTS[adaptations.includes('dyslexia_font')
     ? 'OpenDyslexic' : fontStyle];
@@ -136,29 +135,21 @@ useEffect(() => {
       const acc     = bData.current.accSamples;
       const elapsed = (Date.now() - sessionStart) / 1000;
       const avgAcc  = acc.length
-        ? acc.reduce((a,b)=>a+b,0)/acc.length/100 : 63;
-      const stdAcc  = acc.length > 1
-        ? Math.sqrt(
-            acc.map(v=>(v-avgAcc)**2).reduce((a,b)=>a+b,0)/acc.length
-          )/100
-        : 5;
+  ? acc.reduce((a,b)=>a+b,0)/acc.length : 50;
+const stdAcc  = acc.length > 1
+  ? Math.sqrt(
+      acc.map(v=>(v-avgAcc)**2).reduce((a,b)=>a+b,0)/acc.length
+    )
+  : 5;
 
       const payload = {
-        avg_engagement:   2.0,
-        engagement_std:   0.5,
-        gaze_ratio:       Math.min(
-          1, bData.current.clickCount / Math.max(1, elapsed/10)
-        ),
-        avg_performance:  1.0,
-        acc_mean:         avgAcc,
-        acc_std:          stdAcc,
-        avg_gsr:          1.0,
-        gsr_std:          0.3,
-        avg_temp:         31.5,
-        duration_seconds: elapsed,
-        condition_enc:    0,
-        neurotype,
-      };
+  avg_engagement:   bData.current.clickCount > 5 ? 2.5 :
+                    bData.current.clickCount > 1 ? 1.5 : 0.3,
+  gaze_ratio:       Math.min(1, bData.current.clickCount / Math.max(1, elapsed/10)),
+  acc_std:          stdAcc,
+  scroll_count:     bData.current.scrollCount,
+  neurotype,
+};
 
       try {
   setPredicting(true);
