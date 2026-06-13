@@ -389,7 +389,7 @@ export default function Dashboard({ userId, theme, currentState, currentConfiden
             gap: '10px', marginBottom: '16px',
           }}>
             {[
-              { label: 'Total sessions', value: sessions.length, color: theme.accent },
+              { label: 'Total sessions (last 20)', value: sessions.length, color: theme.accent },
               { label: 'Focused',
                 value: Math.round(stateCounts.Focused / total * 100) + '%',
                 color: STATE_COLORS.Focused },

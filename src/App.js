@@ -152,8 +152,10 @@ const stdAcc  = acc.length > 1
 };
 
       try {
-  setPredicting(true);
-  const res = await axios.post(`${API}/predict/focus-state`, payload);
+          console.log('Behavioral payload:', payload);
+
+         setPredicting(true);
+        const res = await axios.post(`${API}/predict/focus-state`, payload);
         setFocusState(res.data.focusState   || 'Focused');
         setAdaptations(res.data.adaptations || []);
         setConfidence(res.data.confidence);
