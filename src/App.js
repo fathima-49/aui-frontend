@@ -141,12 +141,15 @@ const stdAcc  = acc.length > 1
       acc.map(v=>(v-avgAcc)**2).reduce((a,b)=>a+b,0)/acc.length
     )
   : 5;
+const highSpeedCount = acc.filter(v => v > 800).length;
+const highSpeedRatio = acc.length > 0 ? highSpeedCount / acc.length : 0;
 
       const payload = {
   avg_engagement:   bData.current.clickCount > 5 ? 2.5 :
                     bData.current.clickCount > 1 ? 1.5 : 0.3,
   gaze_ratio:       Math.min(1, bData.current.clickCount / Math.max(1, elapsed/10)),
   acc_std:          stdAcc,
+   high_speed_ratio: highSpeedRatio,
   scroll_count:     bData.current.scrollCount,
   neurotype,
 };
